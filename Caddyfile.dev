@@ -1,0 +1,11 @@
+{
+  auto_https disable_redirects
+  debug
+}
+
+:80 {
+  reverse_proxy rails_app:3000
+  log {
+    level DEBUG
+  }
+}

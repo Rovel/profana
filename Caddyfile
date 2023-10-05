@@ -1,0 +1,14 @@
+:80 {
+#   tls {
+#     dns cloudflare
+#   }
+  reverse_proxy rails_app:3000
+}
+
+:443 {
+  tls {
+    dns cloudflare
+  }
+  reverse_proxy rails_app:3000
+}
+

@@ -1,0 +1,9 @@
+version: '3'
+services:
+  rails_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: stg
+    environment:
+      - RAILS_ENV=staging

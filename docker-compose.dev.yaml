@@ -1,0 +1,41 @@
+version: '3'
+services:
+  db:
+    image: postgres:11.1
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=profana_development
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  caddy:
+    volumes:
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile
+  rails_app:
+    deploy:
+      replicas: 2
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    labels:
+      app: "rails_app"
+    volumes:
+      - rails-logs:/app/log
+    links:
+      - db
+      - prometheus
+      - promtail
+      - loki
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/profana_development
+
+volumes:
+  postgres:
+    driver: local

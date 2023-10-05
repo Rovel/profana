@@ -1,0 +1,57 @@
+version: '3'
+services:
+  redis:
+    image: redis:alpine
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+    ports:
+      - "9090:9090"
+  loki:
+    image: grafana/loki:2.9.0
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yml
+    ports:
+      - "3100:3100"
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    links:
+      - loki
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yml
+      - rails-logs:/var/log/rails
+      # - /var/log:/var/log
+    command: -config.file=/etc/promtail/config.yml
+ 
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - ADMIN_USER=admin
+      - ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    links:
+      - prometheus
+      - loki
+      - promtail
+    ports:
+      - "3001:3000"
+
+  caddy:
+    image: caddy:alpine
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - 80:80
+      - 443:443
+networks:
+  internal_network:
+    driver: bridge
+
+volumes:
+  rails-logs:
+  grafana_data:
+
