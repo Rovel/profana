@@ -1,24 +1,24 @@
-# README
+# Ruby on Rails with prometheus/grafana/loki for monitoring
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a template to create a rails project with prom and grafana monitiring from start.
 
-Things you may want to cover:
+- This project requires docker.
 
-* Ruby version
+### Contents
+- Minimal Rails app
+- Prometheus
+- Grafana
+- Loki
+- Promtail
+- Caddy
+- Redis
+- Postgres
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### Running
+- check the .env and compose files to change secrets
+- change compose files talets versios to avoid breaking changes whant using it as a template
+- run `docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build`
+- access grafana panel
+- add loki and prometheus as connections
+- access rails app to generate logs
+- add grafana dash with loki metrics 
