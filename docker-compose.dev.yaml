@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: postgres:11.1
+    image: postgres:latest
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

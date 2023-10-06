@@ -9,7 +9,7 @@ services:
     ports:
       - "9090:9090"
   loki:
-    image: grafana/loki:2.9.0
+    image: grafana/loki:latest
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yml
@@ -17,7 +17,7 @@ services:
       - "3100:3100"
 
   promtail:
-    image: grafana/promtail:2.9.0
+    image: grafana/promtail:latest
     links:
       - loki
     volumes:
