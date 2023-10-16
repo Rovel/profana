@@ -23,6 +23,7 @@ services:
     volumes:
       - ./promtail-config.yaml:/etc/promtail/config.yml
       - rails-logs:/var/log/rails
+      - caddy-logs:/var/log/caddy
       # - /var/log:/var/log
     command: -config.file=/etc/promtail/config.yml
  
@@ -44,6 +45,7 @@ services:
     image: caddy:alpine
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-logs:/var/log/caddy
     ports:
       - 80:80
       - 443:443
@@ -52,6 +54,7 @@ networks:
     driver: bridge
 
 volumes:
+  caddy-logs:
   rails-logs:
   grafana_data:
 
