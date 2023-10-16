@@ -1,11 +1,26 @@
 {
   auto_https disable_redirects
   debug
+   # Global options block
+  log {
+    output file /var/log/caddy/access.log {
+      roll_size 1gb
+      roll_keep 5
+      roll_keep_for 720h
+    }
+    format json
+  }
 }
+
 
 :80 {
   reverse_proxy rails_app:3000
   log {
-    level DEBUG
+    output file /var/log/caddy/app_access.log {
+      roll_size 100mb
+      roll_keep 10
+      roll_keep_for 48h
+    }
+    format json
   }
 }
