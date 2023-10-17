@@ -17,3 +17,8 @@ prometheus.register(http_requests) unless prometheus.get(:http_requests)
 
 # Start using the counter
 http_requests.increment(labels: { hostname: hostname })
+
+
+# New metric for health check
+db_health = Prometheus::Client::Gauge.new(:db_health_status, 'Database health status.')
+prometheus.register(db_health)
