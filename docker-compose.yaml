@@ -44,7 +44,7 @@ services:
   caddy:
     image: caddy:alpine
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - caddy-logs:/var/log/caddy
     ports:
       - 80:80

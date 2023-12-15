@@ -1,0 +1,7 @@
+version: '3'
+services:
+  k6:
+    image: grafana/k6
+    command: k6 run --vus 10 --duration 30s loadtest.js
+    volumes:
+      - ./k6:/loadtest
