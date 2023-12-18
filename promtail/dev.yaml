@@ -37,12 +37,12 @@ scrape_configs:
         job: nginx_access_log
         agent: promtail
         __path__: /var/log/nginx/access_json.log
-  # - job_name: nginx
-  #   static_configs:
-  #     - targets:
-  #         - localhost
-  #       labels:
-  #         job: nginx
-  #         type: lb
-  #         __path__: /var/log/nginx/*.log
+  - job_name: nginx
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx
+          type: lb
+          __path__: /var/log/nginx/*.log
       

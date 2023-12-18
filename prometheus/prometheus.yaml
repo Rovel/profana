@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'rails_app'
+    static_configs:
+      - targets: ['rails_app:3000']
+      
+  - job_name: 'rails_app_health'
+    static_configs:
+      - targets: ['rails_app:3000']  # Replace with the address of your Rails app
+    scrape_interval: 1m  # Scrape every minute
+    metrics_path: '/'
+      # Replace with the path to your health endpoint
+  - job_name: 'nginx-telegraf'
+    static_configs:
+      - targets: ['telegraf:9126']
+    metrics_path: '/metrics'

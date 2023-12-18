@@ -2,6 +2,13 @@ version: '3'
 services:
   k6:
     image: grafana/k6
-    command: k6 run --vus 10 --duration 30s loadtest.js
+    command: run /loadtest/loadtest.js
+    environment:
+      - MY_HOSTNAME=nginx:80
+      - MY_HOSTNAME2=caddy:80
     volumes:
-      - ./k6:/loadtest
+      - ./k6/loadtest.js:/loadtest/loadtest.js
+    links:
+      - nginx
+      - caddy 
+  

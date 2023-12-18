@@ -93,6 +93,10 @@ GEM
       activesupport (>= 6.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
+    influxdb (0.8.1)
+    influxdb-rails (1.0.3)
+      influxdb (~> 0.6, >= 0.6.4)
+      railties (>= 5.0)
     io-console (0.6.0)
     irb (1.8.1)
       rdoc
@@ -100,6 +104,10 @@ GEM
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
+    kredis (1.6.0)
+      activemodel (>= 6.0.0)
+      activesupport (>= 6.0.0)
+      redis (>= 4.2, < 6)
     lograge (0.13.0)
       actionpack (>= 4)
       activesupport (>= 4)
@@ -202,7 +210,9 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   debug
+  influxdb-rails
   jbuilder
+  kredis
   lograge
   pg (~> 1.1)
   prometheus-client

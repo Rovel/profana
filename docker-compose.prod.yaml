@@ -1,5 +1,9 @@
 version: '3'
 services:
+  loki:
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki/loki.config.prod.yaml:/etc/loki/local-config.yaml
   rails_app:
     build:
       context: .
@@ -7,3 +11,4 @@ services:
       target: prod
     environment:
       - RAILS_ENV=production
+

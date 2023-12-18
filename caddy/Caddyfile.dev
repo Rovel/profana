@@ -1,5 +1,7 @@
 {
-  # Global options block
+  auto_https disable_redirects
+  debug
+   # Global options block
   log {
     output file /var/log/caddy/access.log {
       roll_size 1gb
@@ -9,6 +11,7 @@
     format json
   }
 }
+
 
 :80 {
   reverse_proxy rails:3000

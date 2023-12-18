@@ -1,6 +1,13 @@
 version: '3'
 services:
-  db:
+  promtail:
+    volumes:
+      - ./promtail/dev.yaml:/etc/promtail/config.yml
+ 
+  grafana:
+    links:
+      - postgres
+  postgres:
     image: postgres:11-alpine
     environment:
       - POSTGRES_USER=postgres
@@ -8,20 +15,35 @@ services:
       - POSTGRES_DB=profana_development
     volumes:
       - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   caddy:
     volumes:
       - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile
     ports:
       - "8089:80"
+  prometheus:
+    volumes:
+      - ./prometheus/dev.yaml:/etc/prometheus/prometheus.yml
   nginx:
     image: nginx:alpine
     volumes:
-      # - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/rails_site.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      # - ./nginx/rails_site.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "8088:80"
     links:
-      - rails
+      - rails # https://grafana.com/api/dashboards/14900/revisions/2/download 4DFTt9Wnk
+  telegraf:
+    image: telegraf:latest
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    links:
+      - nginx
+      - influxdb
+      - prometheus
+    ports:
+      - "9126"
   rails:
     deploy:
       replicas: 2
@@ -33,20 +55,23 @@ services:
     labels:
       app: "rails_app"
     volumes:
+      # - ./rails:/app
       - rails-logs:/app/log
     links:
-      - db
+      - postgres
       - prometheus
       - promtail
       - loki
+      - influxdb
     build:
       context: rails
       dockerfile: Dockerfile
       target: dev
     environment:
       - RAILS_ENV=development
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/profana_development
-
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/profana_development # Expose port 3000 on the host
+    ports:
+      - "3000"
 volumes:
   postgres:
     driver: local

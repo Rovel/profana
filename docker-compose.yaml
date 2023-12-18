@@ -1,11 +1,29 @@
 version: '3'
 services:
+  k6:
+    image: grafana/k6
+  influxdb:
+    image: influxdb:1.7
+    environment:
+      - INFLUXDB_DB=rails_metrics
+      - INFLUXDB_USER=${INFLUX_USER-:kjadsuiqwjdiqwoqqqwd}
+      - INFLUXDB_USER_PASSWORD=${INFLUX_PASS-:dsgsfgdsfgaddfgdffgdsafgd}
+      - INFLUXDB_READ_USER=grafana
+      - INFLUXDB_READ_USER_PASSWORD=grafana
+    volumes:
+      - influxdb-data:/var/lib/influxdb
+    ports:
+      - 8086:8086
+  hoststats:
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
   redis:
     image: redis:alpine
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
   loki:
@@ -24,6 +42,7 @@ services:
       - ./promtail-config.yaml:/etc/promtail/config.yml
       - rails-logs:/var/log/rails
       - caddy-logs:/var/log/caddy
+      - nginx-logs:/var/log/nginx
       # - /var/log:/var/log
     command: -config.file=/etc/promtail/config.yml
  
@@ -38,8 +57,18 @@ services:
       - prometheus
       - loki
       - promtail
+      - influxdb
+      - graphite
     ports:
       - "3001:3000"
+  graphite:
+    image: graphiteapp/graphite-statsd
+    ports:
+      - "2003:2003"
+      - "2004:2004"
+      - "7002:7002"
+      - "8125:8125/udp"
+      - "8126:8126"
 
   caddy:
     image: caddy:alpine
@@ -47,14 +76,26 @@ services:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - caddy-logs:/var/log/caddy
     ports:
+      - "8089:80"
+      - "8443:443"
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.
+      - nginx-logs:/var/log/nginx
+    ports:
       - 80:80
       - 443:443
+    links:
+      - rails
 networks:
   internal_network:
     driver: bridge
 
 volumes:
   caddy-logs:
+  nginx-logs:
   rails-logs:
   grafana_data:
+  influxdb-data:
 
