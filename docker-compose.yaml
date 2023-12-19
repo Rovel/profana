@@ -33,7 +33,6 @@ services:
       - ./loki-config.yaml:/etc/loki/local-config.yml
     ports:
       - "3100:3100"
-
   promtail:
     image: grafana/promtail:latest
     links:
@@ -45,9 +44,18 @@ services:
       - nginx-logs:/var/log/nginx
       # - /var/log:/var/log
     command: -config.file=/etc/promtail/config.yml
- 
   grafana:
     image: grafana/grafana:latest
+    # logging:
+    #   driver: loki
+      # options:
+      #   loki-url: http://host.docker.internal:3100/loki/api/v1/push
+      #   loki-relabel-config: |
+      #     - action: labelmap
+      #       regex: swarm_stack
+      #       replacement: namespace
+      #     - action: labelmap
+      #       regex: swarm_(service)
     environment:
       - ADMIN_USER=admin
       - ADMIN_PASSWORD=admin
@@ -64,12 +72,7 @@ services:
   graphite:
     image: graphiteapp/graphite-statsd
     ports:
-      - "2003:2003"
-      - "2004:2004"
-      - "7002:7002"
-      - "8125:8125/udp"
-      - "8126:8126"
-
+      - "8080"
   caddy:
     image: caddy:alpine
     volumes:
