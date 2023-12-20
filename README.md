@@ -16,8 +16,8 @@ This is a template to create a rails project with prom and grafana monitiring fr
 
 ### Running
 - check the .env and compose files to change secrets
-- change compose files talets versios to avoid breaking changes whant using it as a template
-- run `docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build`
+- change compose files latest versions to avoid breaking changes whant using it as a template
+- run `docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build`
 - access grafana panel
 - add loki and prometheus as connections
 - access rails app to generate logs
