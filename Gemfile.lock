@@ -129,7 +129,7 @@ GEM
     net-smtp (0.4.0.1)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.16.2-x86_64-linux)
+    nokogiri (1.19.3-x86_64-linux-gnu)
       racc (~> 1.4)
     pg (1.5.4)
     prometheus-client (4.2.1)
@@ -137,7 +137,7 @@ GEM
       stringio
     puma (5.6.7)
       nio4r (~> 2.0)
-    racc (1.7.3)
+    racc (1.8.1)
     rack (3.0.9.1)
     rack-cors (2.0.1)
       rack (>= 2.0.0)
